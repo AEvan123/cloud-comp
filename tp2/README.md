@@ -45,3 +45,110 @@ curl -s -H "Metadata: true" \
 
 169.254.169.254 est l'adresse de l'IMDS d'Azure.
 Cette route vers cette adresse est faite lors du démarrage de la machine lorsqu'elle a une adresse ip via DHCP
+
+# IV. Monitoring
+
+### 🌞 Une commande az qui permet de lister les alertes actuellement configurées
+```
+azureuser@super-vm:~$ az monitor metrics alert list
+[
+  {
+    "actions": [
+      {
+        "actionGroupId": "/subscriptions/<sub_id>/resourceGroups/tp2/providers/Microsoft.Insights/actionGroups/ag-tp2-alerts",
+        "webHookProperties": {}
+      }
+    ],
+    "autoMitigate": true,
+    "criteria": {
+      "allOf": [
+        {
+          "criterionType": "StaticThresholdCriterion",
+          "metricName": "Percentage CPU",
+          "metricNamespace": "Microsoft.Compute/virtualMachines",
+          "name": "Metric1",
+          "operator": "GreaterThan",
+          "skipMetricValidation": false,
+          "threshold": 70.0,
+          "timeAggregation": "Average"
+        }
+      ],
+      "odata.type": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria"
+    },
+    "description": "Alert when CPU usage exceeds 70%",
+    "enabled": true,
+    "evaluationFrequency": "PT1M",
+    "id": "/subscriptions/<sub_id>/resourceGroups/tp2/providers/Microsoft.Insights/metricAlerts/cpu-alert-super-vm",
+    "location": "global",
+    "name": "cpu-alert-super-vm",
+    "resourceGroup": "tp2",
+    "scopes": [
+      "/subscriptions/<sub_id>/resourceGroups/tp2/providers/Microsoft.Compute/virtualMachines/super-vm"
+    ],
+    "severity": 2,
+    "tags": {},
+    "targetResourceRegion": "",
+    "targetResourceType": "",
+    "type": "Microsoft.Insights/metricAlerts",
+    "windowSize": "PT5M"
+  },
+  {
+    "actions": [
+      {
+        "actionGroupId": "/subscriptions/<sub_id>/resourceGroups/tp2/providers/Microsoft.Insights/actionGroups/ag-tp2-alerts",
+        "webHookProperties": {}
+      }
+    ],
+    "autoMitigate": true,
+    "criteria": {
+      "allOf": [
+        {
+          "criterionType": "StaticThresholdCriterion",
+          "metricName": "Available Memory Bytes",
+          "metricNamespace": "Microsoft.Compute/virtualMachines",
+          "name": "Metric1",
+          "operator": "LessThan",
+          "skipMetricValidation": false,
+          "threshold": 512000000.0,
+          "timeAggregation": "Average"
+        }
+      ],
+      "odata.type": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria"
+    },
+    "description": "Less than 512Mo available",
+    "enabled": true,
+    "evaluationFrequency": "PT1M",
+    "id": "/subscriptions/<sub_id>/resourceGroups/tp2/providers/Microsoft.Insights/metricAlerts/ram-alert-super-vm",
+    "location": "global",
+    "name": "ram-alert-super-vm",
+    "resourceGroup": "tp2",
+    "scopes": [
+      "/subscriptions/<sub_id>/resourceGroups/tp2/providers/Microsoft.Compute/virtualMachines/super-vm"
+    ],
+    "severity": 2,
+    "tags": {},
+    "targetResourceRegion": "",
+    "targetResourceType": "",
+    "type": "Microsoft.Insights/metricAlerts",
+    "windowSize": "PT5M"
+  }
+]
+```
+### 🌞 Stress de la machine
+
+#### installez le paquet stress-ng dans la VM
+#### utilisez la commande stress-ng pour :
+
+#### stress le CPU (donner la commande)
+```
+azureuser@super-vm:~$ stress-ng --cpu 2 --cpu-method all --metrics-brief -t 10m
+```
+#### stress la RAM (donner la commande)
+```
+stress-ng --vm 1 --vm-bytes 75% --vm-keep --metrics-brief -t 10m
+```
+
+### 🌞 Vérifier que des alertes ont été fired
+
+#### dans le compte-rendu, je veux une commande az qui montre que les alertes ont été levées
+
