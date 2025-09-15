@@ -39,7 +39,7 @@ Azure storage vérifie ensuite le token et l'audience.
 #### à priori ce sera une requête vers 169.254.169.254
 ```
 curl -s -H "Metadata: true" \
-  "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://storage.azure.com/"
+  "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://storage.azure.com/" | jq -r ".access_token"
 ```
 ### 🌞 Expliquez comment l'IP 169.254.169.254 peut être joignable
 
