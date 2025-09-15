@@ -151,6 +151,20 @@ stress-ng --vm 1 --vm-bytes 75% --vm-keep --metrics-brief -t 10m
 ### 🌞 Vérifier que des alertes ont été fired
 
 #### dans le compte-rendu, je veux une commande az qui montre que les alertes ont été levées
+```
+azureuser@super-vm:~$ az graph query -q "
+alertsmanagementresources | project name"
+{
+  "count": 1,
+  "data": [
+    {
+      "name": "cpu-alert-super-vm"
+    }
+  ],
+  "skip_token": null,
+  "total_records": 1
+}
+```
 # V. Azure Vault
 
 ```
