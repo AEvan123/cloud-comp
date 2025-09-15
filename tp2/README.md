@@ -42,3 +42,6 @@ curl -s -H "Metadata: true" \
   "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://storage.azure.com/"
 ```
 ### 🌞 Expliquez comment l'IP 169.254.169.254 peut être joignable
+
+169.254.169.254 est l'adresse de l'IMDS d'Azure.
+Cette route vers cette adresse est faite lors du démarrage de la machine lorsqu'elle a une adresse ip via DHCP
