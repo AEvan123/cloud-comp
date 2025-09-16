@@ -179,8 +179,8 @@ azureuser@super-vm:~$ az keyvault secret show --name "<Le nom de ton secret ici>
 ```
 #!/bin/bash
 # variables
-keyvault_name="coffrefort"
-vault_name="lepetitsecret"
+keyvault_name="<nom_keyvault>"
+vault_name="<nom_vault>"
 
 #
 secret_url="https://${keyvault_name}.vault.azure.net/secrets/${vault_name}?api-version=7.4'"
