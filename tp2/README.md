@@ -177,54 +177,21 @@ azureuser@super-vm:~$ az keyvault secret show --name "<Le nom de ton secret ici>
 #### il faut donc faire une requête à la Azure Key Vault depuis la VM Azure
 #### un ptit script shell ça le fait !
 ```
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+# variables
+keyvault_name="coffrefort"
+vault_name="lepetitsecret"
 
-# === À RENSEIGNER ===
-KEYVAULT_NAME="<nom_keyvault>"        # sans le .vault.azure.net
-SECRET_NAME="<nom_secret>"      # nom du secret
-SECRET_VERSION=""             # optionnel, sinon dernière version
-USER_ASSIGNED_CLIENT_ID=""    # optionnel: clientId d'une identity managée "user-assigned"
+#
+secret_url="https://${keyvault_name}.vault.azure.net/secrets/${vault_name}?api-version=7.4'"
 
-# === Constantes ===
-IMDS="http://169.254.169.254/metadata/identity/oauth2/token"
-IMDS_API="2018-02-01"
-KV_RESOURCE_ENC="https%3A%2F%2Fvault.azure.net"
-KV_API="7.4"
+token="$(curl -sS -H Metadata:true \
+'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net' \
+| jq -r '.access_token')"
 
-# 1) Récupérer un jeton AAD pour Key Vault via l'IMDS (Managed Identity)
-CLIENT_PARAM=""
-if [[ -n "$USER_ASSIGNED_CLIENT_ID" ]]; then
-  CLIENT_PARAM="&client_id=${USER_ASSIGNED_CLIENT_ID}"
-fi
+secret="$(curl -sS -H "Authorization: Bearer ${token}" \
+"https://${keyvault_name}.vault.azure.net/secrets/${vault_name}?api-version=7.4" | jq -r '.value')"
 
-ACCESS_TOKEN="$(
-  curl -sS -H "Metadata:true" \
-    "${IMDS}?api-version=${IMDS_API}&resource=${KV_RESOURCE_ENC}${CLIENT_PARAM}" \
-  | jq -r '.access_token'
-)"
-
-# 2) Appeler l'API Secrets de Key Vault
-BASE_URL="https://${KEYVAULT_NAME}.vault.azure.net/secrets/${SECRET_NAME}"
-if [[ -n "$SECRET_VERSION" ]]; then
-  BASE_URL="${BASE_URL}/${SECRET_VERSION}"
-fi
-
-# On récupère la réponse et le code HTTP proprement
-TMP_JSON="$(mktemp)"
-HTTP_CODE="$(
-  curl -sS -o "${TMP_JSON}" -w "%{http_code}" \
-    -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-    "${BASE_URL}?api-version=${KV_API}"
-)"
-
-if [[ "${HTTP_CODE}" != "200" ]]; then
-  echo "Erreur Key Vault (HTTP ${HTTP_CODE}):"
-  cat "${TMP_JSON}" 1>&2
-  exit 1
-fi
-
-# 3) Afficher uniquement la valeur du secret
-jq -r '.value' "${TMP_JSON}"
-rm -f "${TMP_JSON}"
+echo $secret
+exit 0
 ```
