@@ -152,17 +152,19 @@ stress-ng --vm 1 --vm-bytes 75% --vm-keep --metrics-brief -t 10m
 
 #### dans le compte-rendu, je veux une commande az qui montre que les alertes ont été levées
 ```
-azureuser@super-vm:~$ az graph query -q "
-alertsmanagementresources | project name"
+azureuser@super-vm:~$ az graph query -q "alertsmanagementresources | project name"
 {
-  "count": 1,
+  "count": 2,
   "data": [
     {
       "name": "cpu-alert-super-vm"
+    },
+    {
+      "name": "ram-alert-super-vm"
     }
   ],
   "skip_token": null,
-  "total_records": 1
+  "total_records": 2
 }
 ```
 # V. Azure Vault
