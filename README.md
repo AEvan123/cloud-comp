@@ -32,11 +32,16 @@ terraform apply
 
 Plus :
 Création des NSG pour les machines
+
 Utilisation de Key vault
+
 Utilisation des certification Azure
-Monitoring vm 1 :
+
+Monitoring vm 1 (app) :
 * Ram
 * CPU
-Monitoring vm 2 :
+Monitoring vm 2 (MySQL) :
 * Service MYSQL
 * Port 3306
+
+Les machines 1 et deux communiquent avec les adresses ip privée car la vm 2 n'a pas d'ip publique.
