@@ -30,3 +30,13 @@ terraform apply
 
 * `cloud-init-web.sh` : installe Nginx + PHP + Nextcloud, se connecte à Azure via Managed Identity (`az login --identity`), récupère le PFX depuis Key Vault (`${V_NAME}/${KV_NAME}`), extrait certificat et la clé, et génère le vhost Nginx pour `${NEXTCLOUD_FQDN}` (HTTP → redir vers HTTPS pour /nextcloud). Crée aussi la tâche cron Nextcloud.
 
+Plus :
+Création des NSG pour les machines
+Utilisation de Key vault
+Utilisation des certification Azure
+Monitoring vm 1 :
+* Ram
+* CPU
+Monitoring vm 2 :
+* Service MYSQL
+* Port 3306
